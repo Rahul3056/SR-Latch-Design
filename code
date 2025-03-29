@@ -1,0 +1,41 @@
+#### **Example Verilog Code (NOR-Based SR Latch)**  
+```verilog
+module sr_latch (
+    input wire S, R,
+    output wire Q, Qn
+);
+    assign Q = ~(S | Qn);
+    assign Qn = ~(R | Q);
+endmodule
+```
+
+#### **Testbench Code**  
+```verilog
+module testbench;
+    reg S, R;
+    wire Q, Qn;
+
+    sr_latch uut (.S(S), .R(R), .Q(Q), .Qn(Qn));
+
+    initial begin
+        $monitor("Time=%0t | S=%b | R=%b | Q=%b | Qn=%b", $time, S, R, Q, Qn);
+        
+        S = 0; R = 0; #10;  
+        S = 1; R = 0; #10;  
+        S = 0; R = 1; #10;  
+        S = 1; R = 1; #10;  
+        S = 0; R = 0; #10;  
+
+        $finish;
+    end
+endmodule
+```
+
+#### **Simulation Output (Console Log Example)**  
+```
+Time=0 | S=0 | R=0 | Q=X | Qn=X  
+Time=10 | S=1 | R=0 | Q=1 | Qn=0  
+Time=20 | S=0 | R=1 | Q=0 | Qn=1  
+Time=30 | S=1 | R=1 | Q=X | Qn=X (Invalid State)  
+Time=40 | S=0 | R=0 | Q=0 | Qn=1  
+```  
